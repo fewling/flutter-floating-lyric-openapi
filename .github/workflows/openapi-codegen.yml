@@ -35,7 +35,11 @@ jobs:
             -i index.yaml \
             -g dart-dio \
             -o ./generated \
-            --additional-properties=pubName=floating_lyric_api,pubLibrary=floating_lyric_api,nullableFields=true,useEnumExtension=true,enumUnknownDefaultCase=true
+            --additional-properties=pubName=floating_lyric_api,pubLibrary=floating_lyric_api,nullableFields=true,useEnumExtension=true,enumUnknownDefaultCase=true,equalityCheckMethod=equatable,finalProperties=true,useEnumExtension=true,useOptional=true,serializationLibrary=json_serializable
+
+          sed -i '' 's/sdk: .*/sdk: ">=3.8.0 <4.0.0"/' pubspec.yaml
+          fvm flutter pub get
+          fvm dart run build_runner build -d
 
       - name: Checkout target repository
         uses: actions/checkout@v4

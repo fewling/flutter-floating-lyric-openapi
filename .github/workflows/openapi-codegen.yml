@@ -46,13 +46,13 @@ jobs:
       - name: Get Flutter dependencies
         run: |
           cd generated
+          sed -i 's/sdk: .*/sdk: ">=3.8.0 <4.0.0"/' pubspec.yaml
           flutter pub get
 
       - name: Run build_runner
         run: |
           cd generated
           # Update SDK constraint for Linux (no empty string after -i)
-          sed -i 's/sdk: .*/sdk: ">=3.8.0 <4.0.0"/' pubspec.yaml
           dart run build_runner build --delete-conflicting-outputs
 
       - name: Checkout target repository

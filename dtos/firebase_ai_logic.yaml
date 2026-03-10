@@ -1,0 +1,17 @@
+AILogicTranslationRequestDTO:
+  type: object
+  required:
+    - lrc
+  properties:
+    lrc:
+      type: string
+      description: The LRC lyrics content to be translated.
+
+AILogicTranslationResponseDTO:
+  type: object
+  required:
+    - lrc
+  properties:
+    lrc:
+      type: string
+      description: The translated LRC lyrics content returned.

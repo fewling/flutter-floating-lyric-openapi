@@ -1,0 +1,20 @@
+openapi: 3.1.0
+info:
+  title: Floating Lyric API
+  description: API specifications for the Floating Lyric Cloud Functions.
+  version: 1.0.0
+
+paths: {}
+
+components:
+  schemas:
+    TranslateRequestDTO:
+      $ref: "./dtos/translate.yaml#/TranslateRequestDTO"
+    TranslateResponseDTO:
+      $ref: "./dtos/translate.yaml#/TranslateResponseDTO"
+    AILogicTranslationRequestDTO:
+      $ref: "./dtos/firebase_ai_logic.yaml#/AILogicTranslationRequestDTO"
+    AILogicTranslationResponseDTO:
+      $ref: "./dtos/firebase_ai_logic.yaml#/AILogicTranslationResponseDTO"
+    FeatureFlag:
+      $ref: "./dtos/feature_flag.yaml#/FeatureFlag"

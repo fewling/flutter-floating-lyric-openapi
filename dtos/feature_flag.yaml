@@ -1,0 +1,82 @@
+FeatureFlag:
+  title: FeatureFlag
+  description: DTO representing the state of feature flags, particularly for AI translation features.
+  type: object
+  required:
+    - isAiTranslatorEnabled
+    - aiTranslatorProviders
+  properties:
+    isAiTranslatorEnabled:
+      type: boolean
+      default: true
+      description: Whether the AI Translator feature is enabled.
+    aiTranslatorProviders:
+      type: array
+      items:
+        $ref: "#/AITranslatorProvider"
+      description: List of available AI translator providers.
+
+AITranslatorProvider:
+  title: AITranslatorProvider
+  description: DTO representing an AI translator provider, which may offer multiple translators.
+  type: object
+  required:
+    - isEnabled
+    - displayName
+    - translators
+  properties:
+    isEnabled:
+      type: boolean
+      description: Whether this provider is enabled.
+    displayName:
+      type: string
+      description: Human-readable name for this provider.
+    translators:
+      type: array
+      items:
+        $ref: "#/AITranslator"
+      description: List of translators offered by this provider.
+
+AITranslator:
+  title: AITranslator
+  description: DTO representing a specific AI translator, which belongs to a provider.
+  type: object
+  required:
+    - isEnabled
+    - provider
+    - id
+    - displayName
+    - family
+  properties:
+    family:
+      type: string
+      description: General family or category of this translator (e.g., "gpt", "gemini").
+      enum:
+        - gpt
+        - gemini
+        - deepseek
+    isEnabled:
+      type: boolean
+      description: Whether this translator is enabled.
+    provider:
+      $ref: "#/AIProvider"
+    id:
+      type: string
+      description: |
+        For `gemini` (Firebase AI Logic), this is the templateID or templateName.
+        For all other providers, this is the model name.
+    displayName:
+      type: string
+      description: Human-readable name for this translator.
+    description:
+      default: ""
+      type: string
+      description: Optional longer description of this translator.
+
+AIProvider:
+  title: AIProvider
+  description: AI provider type (snake_case serialization of the Dart AIProvider enum).
+  type: string
+  enum:
+    - ai_logic
+    - cloud_function

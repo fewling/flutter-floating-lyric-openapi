@@ -1,0 +1,22 @@
+TranslateRequestDTO:
+  type: object
+  required:
+    - lrc
+    - translator
+  properties:
+    lrc:
+      type: string
+      description: LRC lyrics content to translate
+      example: "[00:01.00] Some lyric line\n[00:05.00] Another line"
+    translator:
+      $ref: "./feature_flag.yaml#/AITranslator"
+
+TranslateResponseDTO:
+  type: object
+  required:
+    - content
+  properties:
+    content:
+      type: string
+      description: Translated content returned by the AI model
+      example: "[00:01.00] Translated lyric line\n[00:05.00] Another translated line"

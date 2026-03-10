@@ -1,0 +1,72 @@
+name: TypeScript Types Sync
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.yaml"
+      - "dtos/**"
+      - ".github/workflows/typescript-types-sync.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: typescript-types-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate-typescript-types:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install openapi-typescript
+        run: npm install -g openapi-typescript
+
+      - name: Generate TypeScript types
+        run: |
+          mkdir -p output/functions/src/generated
+          npx openapi-typescript index.yaml -o output/functions/src/generated/schema.d.ts
+
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/flutter-floating-lyric-firebase-cloud-function
+          token: ${{ secrets.FIREBASE_CLOUD_FUNCTION_REPO_TOKEN }}
+          path: target-repo
+          fetch-depth: 0
+
+      - name: Copy generated files
+        run: |
+          # Ensure target directory exists
+          mkdir -p target-repo/functions/src/generated
+
+          # Copy generated types
+          cp output/functions/src/generated/schema.d.ts target-repo/functions/src/generated/
+
+          # Configure git
+          cd target-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push
+        run: |
+          cd target-repo
+          git add -A
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: regenerate TypeScript types from ${{ github.repository }}@${{ github.sha }}"
+            git push
+          fi

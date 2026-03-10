@@ -1,0 +1,112 @@
+name: OpenAPI Code Generation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.yaml"
+      - "dtos/**"
+      - ".github/workflows/openapi-codegen.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install openapi-generator-cli
+        run: npm install @openapitools/openapi-generator-cli -g
+
+      - name: Generate Dart client
+        run: |
+          openapi-generator-cli generate \
+            -i index.yaml \
+            -g dart-dio \
+            -o ./generated \
+            --additional-properties=pubName=floating_lyric_api,pubLibrary=floating_lyric_api,nullableFields=true,useEnumExtension=true,enumUnknownDefaultCase=true
+
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/flutter-floating-lyric-pkg-generated-openapi
+          token: ${{ secrets.TARGET_REPO_TOKEN }}
+          path: target-repo
+          fetch-depth: 0
+
+      - name: Get current version
+        id: current-version
+        run: |
+          cd target-repo
+          if [ -f pubspec.yaml ]; then
+            CURRENT_VERSION=$(grep -E "^version:" pubspec.yaml | sed 's/version: //' | tr -d ' ')
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "version=0.0.0+0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Increment version
+        id: new-version
+        run: |
+          CURRENT="${{ steps.current-version.outputs.version }}"
+
+          # Parse version (format: major.minor.patch+build)
+          MAJOR=$(echo "$CURRENT" | cut -d'.' -f1)
+          MINOR=$(echo "$CURRENT" | cut -d'.' -f2 | cut -d'+' -f1)
+          PATCH=$(echo "$CURRENT" | cut -d'+' -f1 | cut -d'.' -f3)
+          BUILD=$(echo "$CURRENT" | cut -d'+' -f2)
+
+          # Default values if parsing fails
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
+          BUILD=${BUILD:-0}
+
+          # Increment patch and build
+          NEW_PATCH=$((PATCH + 1))
+          NEW_BUILD=$((BUILD + 1))
+          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}+${NEW_BUILD}"
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT"
+          echo "New version: $NEW_VERSION"
+
+      - name: Copy generated files and update version
+        run: |
+          # Remove old files but preserve .git directory
+          find target-repo -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+
+          # Copy generated files
+          cp -r generated/* target-repo/
+
+          # Update version in pubspec.yaml
+          cd target-repo
+          if [ -f pubspec.yaml ]; then
+            sed -i "s/^version:.*/version: ${{ steps.new-version.outputs.version }}/" pubspec.yaml
+          fi
+
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push
+        run: |
+          cd target-repo
+          git add -A
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: bump version to ${{ steps.new-version.outputs.version }}, regenerate API client from ${{ github.sha }}"
+            git push
+          fi

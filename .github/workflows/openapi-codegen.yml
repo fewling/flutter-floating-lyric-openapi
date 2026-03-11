@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   generate:
@@ -119,12 +119,22 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit and push
+        id: commit
         run: |
           cd target-repo
           git add -A
           if git diff --quiet && git diff --staged --quiet; then
             echo "No changes to commit"
+            echo "committed=false" >> $GITHUB_OUTPUT
           else
             git commit -m "chore: bump version to ${{ steps.new-version.outputs.version }}, regenerate API client from ${{ github.sha }}"
             git push
+            echo "committed=true" >> $GITHUB_OUTPUT
           fi
+
+      - name: Tag release
+        if: steps.commit.outputs.committed == 'true'
+        run: |
+          cd target-repo
+          git tag "v${{ steps.new-version.outputs.version }}"
+          git push origin "v${{ steps.new-version.outputs.version }}"

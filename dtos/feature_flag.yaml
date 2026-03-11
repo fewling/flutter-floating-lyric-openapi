@@ -28,6 +28,9 @@ AITranslatorProvider:
     isEnabled:
       type: boolean
       description: Whether this provider is enabled.
+    imgUrl:
+      type: string
+      description: Optional URL to an image representing this provider (e.g., logo).
     displayName:
       type: string
       description: Human-readable name for this provider.

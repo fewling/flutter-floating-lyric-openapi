@@ -1,4 +1,4 @@
-ForceUpdateConfigDTO:
+ForceUpdateConfig:
   type: object
   required:
     - minimumVersionAndroid

@@ -18,5 +18,5 @@ components:
       $ref: "./dtos/firebase_ai_logic.yaml#/AILogicTranslationResponseDTO"
     FeatureFlag:
       $ref: "./dtos/feature_flag.yaml#/FeatureFlag"
-    ForceUpdateConfigDTO:
-      $ref: "./dtos/force_update_config.yaml#/ForceUpdateConfigDTO"
+    ForceUpdateConfig:
+      $ref: "./dtos/force_update_config.yaml#/ForceUpdateConfig"

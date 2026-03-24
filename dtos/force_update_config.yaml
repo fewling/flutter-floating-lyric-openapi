@@ -1,0 +1,19 @@
+ForceUpdateConfigDTO:
+  type: object
+  required:
+    - minimumVersionAndroid
+  properties:
+    minimumVersionAndroid:
+      type: string
+      description: Minimum required version for Android devices
+      example: "1.0.0"
+    forceUpdate:
+      type: boolean
+      description: Whether to force users to update the app
+      default: true
+      example: true
+    changelog:
+      type: string
+      description: Changelog or release notes for the new version
+      default: ""
+      example: "Bug fixes and performance improvements"

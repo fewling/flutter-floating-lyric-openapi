@@ -36,8 +36,8 @@ jobs:
 
       - name: Generate TypeScript types
         run: |
-          mkdir -p output/functions/src/generated
-          npx openapi-typescript index.yaml -o output/functions/src/generated/schema.d.ts
+          mkdir -p output/src/generated
+          npx openapi-typescript index.yaml -o output/src/generated/schema.d.ts
 
       - name: Checkout target repository
         uses: actions/checkout@v4
@@ -50,10 +50,10 @@ jobs:
       - name: Copy generated files
         run: |
           # Ensure target directory exists
-          mkdir -p target-repo/functions/src/generated
+          mkdir -p target-repo/src/generated
 
           # Copy generated types
-          cp output/functions/src/generated/schema.d.ts target-repo/functions/src/generated/
+          cp output/src/generated/schema.d.ts target-repo/src/generated/
 
           # Configure git
           cd target-repo

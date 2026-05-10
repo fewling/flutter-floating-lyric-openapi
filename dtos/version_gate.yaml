@@ -1,0 +1,24 @@
+VersionGate:
+  title: VersionGate
+  description: |
+    Optional app-version constraint for a feature-flag entry.
+    A gate passes when both conditions hold:
+      - current app version >= minVersion (if provided), AND
+      - current app version is not in excludedVersions.
+    Both fields are optional; an empty or absent gate always passes.
+  type: object
+  properties:
+    minVersion:
+      type: string
+      description: |
+        Minimum semver string that passes the gate (e.g. "6.4.0").
+        If absent, no minimum is enforced.
+      example: "6.4.0"
+    excludedVersions:
+      type: array
+      items:
+        type: string
+      description: |
+        Specific semver strings that fail the gate even if >= minVersion.
+        If absent or empty, none excluded.
+      example: ["6.2.5"]

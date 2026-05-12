@@ -20,5 +20,3 @@ components:
       $ref: "./dtos/feature_flag.yaml#/FeatureFlag"
     ForceUpdateConfig:
       $ref: "./dtos/force_update_config.yaml#/ForceUpdateConfig"
-    VersionGate:
-      $ref: "./dtos/version_gate.yaml#/VersionGate"

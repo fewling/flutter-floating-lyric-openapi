@@ -16,9 +16,8 @@ FeatureFlag:
         $ref: "#/AITranslatorProvider"
       description: List of available AI translator providers.
     versionGate:
+      $ref: "./version_gate.yaml#/VersionGate"
       description: Optional app-version constraint for the AI translator master toggle.
-      allOf:
-        - $ref: "./version_gate.yaml#/VersionGate"
 
 AITranslatorProvider:
   title: AITranslatorProvider
@@ -44,9 +43,8 @@ AITranslatorProvider:
         $ref: "#/AITranslator"
       description: List of translators offered by this provider.
     versionGate:
+      $ref: "./version_gate.yaml#/VersionGate"
       description: Optional app-version constraint for this provider.
-      allOf:
-        - $ref: "./version_gate.yaml#/VersionGate"
 
 AITranslator:
   title: AITranslator
@@ -84,9 +82,8 @@ AITranslator:
       type: string
       description: Optional longer description of this translator.
     versionGate:
+      $ref: "./version_gate.yaml#/VersionGate"
       description: Optional app-version constraint for this translator.
-      allOf:
-        - $ref: "./version_gate.yaml#/VersionGate"
 
 AIProvider:
   title: AIProvider

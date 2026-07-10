@@ -20,3 +20,11 @@ components:
       $ref: "./dtos/feature_flag.yaml#/FeatureFlag"
     ForceUpdateConfig:
       $ref: "./dtos/force_update_config.yaml#/ForceUpdateConfig"
+    ChoreographSongMetaDTO:
+      $ref: "./dtos/choreograph.yaml#/ChoreographSongMetaDTO"
+    ChoreographLrcLineDTO:
+      $ref: "./dtos/choreograph.yaml#/ChoreographLrcLineDTO"
+    ChoreographRequestDTO:
+      $ref: "./dtos/choreograph.yaml#/ChoreographRequestDTO"
+    ChoreographResponseDTO:
+      $ref: "./dtos/choreograph.yaml#/ChoreographResponseDTO"

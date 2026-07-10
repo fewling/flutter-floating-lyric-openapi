@@ -1,0 +1,117 @@
+ChoreographSongMetaDTO:
+  title: ChoreographSongMetaDTO
+  description: Metadata of the song being choreographed.
+  type: object
+  required:
+    - title
+    - artist
+    - durationMs
+  properties:
+    title:
+      type: string
+      description: Song title as reported by the active media session.
+      example: "Night Drive"
+    artist:
+      type: string
+      description: Song artist as reported by the active media session.
+      example: "Neon City"
+    album:
+      type: string
+      description: Optional album name, when the media session reports one.
+      example: "Midnight Signals"
+    durationMs:
+      type: integer
+      description: Total song duration in milliseconds; every ms window in the returned document must fit within it.
+      example: 240000
+
+ChoreographLrcLineDTO:
+  title: ChoreographLrcLineDTO
+  description: One timestamped lyric line from the synced LRC.
+  type: object
+  required:
+    - timeMs
+    - text
+  properties:
+    timeMs:
+      type: integer
+      description: Line start time in milliseconds from the beginning of the song.
+      example: 10000
+    text:
+      type: string
+      description: Lyric line text without LRC timestamp tags.
+      example: "Hello world again"
+
+ChoreographRequestDTO:
+  title: ChoreographRequestDTO
+  description: Request payload for the choreographLyrics callable.
+  type: object
+  required:
+    - songMeta
+    - lrcLines
+    - paletteSwatches
+    - locale
+    - intensity
+    - supportedProtocolVersion
+    - supportedCatalogVersion
+  properties:
+    songMeta:
+      $ref: "#/ChoreographSongMetaDTO"
+    lrcLines:
+      type: array
+      items:
+        $ref: "#/ChoreographLrcLineDTO"
+      description: Full timestamped LRC line list, in playback order; the array index is the lineIndex the document references.
+    paletteSwatches:
+      type: array
+      items:
+        type: string
+      description: "Five #RRGGBB uppercase hex swatches extracted from the album art on-device, ordered by palette role (primary, secondary, accent, muted, background)."
+      example: ["#FFFFFF", "#B0BEC5", "#64B5F6", "#78909C", "#000000"]
+    locale:
+      type: string
+      description: Locale for the summary blurb, e.g. "en" or "zh-Hant".
+      example: "en"
+    intensity:
+      type: string
+      description: Requested choreography intensity preset.
+      enum:
+        - subtle
+        - full
+    supportedProtocolVersion:
+      type: string
+      description: The A2UI protocol version the client can render; the server rejects versions it cannot serve.
+      example: "0.9.1"
+    supportedCatalogVersion:
+      type: string
+      description: The FX catalog version the client can render; the server rejects versions it cannot serve.
+      example: "fx-v1"
+    modelId:
+      type: string
+      description: Optional model id override sourced from Remote Config by the client; the server defaults to gemini-2.5-flash when omitted.
+      example: "gemini-2.5-flash"
+
+ChoreographResponseDTO:
+  title: ChoreographResponseDTO
+  description: Response payload of the choreographLyrics callable.
+  type: object
+  required:
+    - a2uiDocumentJson
+    - summaryText
+    - protocolVersion
+    - catalogVersion
+  properties:
+    a2uiDocumentJson:
+      type: string
+      description: The validated A2UI choreography cue document, serialized as a JSON string and parsed to a Map at the client repo boundary.
+    summaryText:
+      type: string
+      description: One-line agent blurb of at most 140 characters, in the requested locale.
+      example: "Scored a rainy-night mood with embers on the bridge and a gold burst at the chorus."
+    protocolVersion:
+      type: string
+      description: The A2UI protocol version the document conforms to.
+      example: "0.9.1"
+    catalogVersion:
+      type: string
+      description: The FX catalog version the document conforms to.
+      example: "fx-v1"

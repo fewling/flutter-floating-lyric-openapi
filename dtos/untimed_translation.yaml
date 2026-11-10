@@ -1,4 +1,5 @@
 UntimedTranslationSectionDTO:
+  title: UntimedTranslationSectionDTO
   type: object
   additionalProperties: false
   required: [id, text]
@@ -13,6 +14,7 @@ UntimedTranslationSectionDTO:
       description: Original section text, including authored line breaks. The client retains authoritative originals and section/stanza structure.
 
 UntimedTranslationRequestDTO:
+  title: UntimedTranslationRequestDTO
   type: object
   additionalProperties: false
   description: |
@@ -35,6 +37,7 @@ UntimedTranslationRequestDTO:
       example: zh-Hant
 
 UntimedTranslatedSectionDTO:
+  title: UntimedTranslatedSectionDTO
   type: object
   additionalProperties: false
   required: [sectionId, language, text]
@@ -53,6 +56,7 @@ UntimedTranslatedSectionDTO:
       description: Translated section text, preserving meaningful line breaks. Whitespace-only translations are unusable.
 
 UntimedTranslationResponseDTO:
+  title: UntimedTranslationResponseDTO
   type: object
   additionalProperties: false
   description: |
@@ -72,6 +76,7 @@ UntimedTranslationResponseDTO:
         $ref: "#/UntimedTranslatedSectionDTO"
 
 TranslateUntimedRequestDTO:
+  title: TranslateUntimedRequestDTO
   type: object
   additionalProperties: false
   description: |

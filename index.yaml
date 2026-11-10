@@ -28,3 +28,13 @@ components:
       $ref: "./dtos/choreograph.yaml#/ChoreographRequestDTO"
     ChoreographResponseDTO:
       $ref: "./dtos/choreograph.yaml#/ChoreographResponseDTO"
+    UntimedTranslationSectionDTO:
+      $ref: "./dtos/untimed_translation.yaml#/UntimedTranslationSectionDTO"
+    UntimedTranslationRequestDTO:
+      $ref: "./dtos/untimed_translation.yaml#/UntimedTranslationRequestDTO"
+    UntimedTranslatedSectionDTO:
+      $ref: "./dtos/untimed_translation.yaml#/UntimedTranslatedSectionDTO"
+    UntimedTranslationResponseDTO:
+      $ref: "./dtos/untimed_translation.yaml#/UntimedTranslationResponseDTO"
+    TranslateUntimedRequestDTO:
+      $ref: "./dtos/untimed_translation.yaml#/TranslateUntimedRequestDTO"
